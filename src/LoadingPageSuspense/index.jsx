@@ -1,4 +1,4 @@
-import { Suspense } from 'react/cjs/react.production.min';
+import { Suspense } from 'react';
 import Spinner from '../shared/Spinner';
 import LoadingFast from './LoadingFast';
 import LoadingMedium from './LoadingMedium';
