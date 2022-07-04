@@ -17,7 +17,7 @@ const getDataMedium = async () => {
 };
 
 const getDataSlow = async () => {
-  await waitForIt(30000);
+  await waitForIt(3000);
   return { data: "I'm so slow it's incredible!" };
 };
 

@@ -45,7 +45,4 @@ const App = () => {
   );
 };
 
-// TODO: add example of 3 loading components with a loader each,
-//       and a fallback component when all 3 are loading (with suspense)
-
 export default App;
