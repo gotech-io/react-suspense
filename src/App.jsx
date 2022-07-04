@@ -1,74 +1,30 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
-import ActiveLink from './ActiveLink';
-// import Home from './Home';
-// import StaticData from './StaticData';
-// import FetchData from './FetchData';
+import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
 import './App.css';
+import LoadingPage from './LoadingPage';
+import customLazy from './utils/customLazy';
 
 import('./Home').then((module) => {
-  console.log(module.default());
+  console.log(module.default);
 });
 
-const Home = React.lazy(() => import('./Home'));
-const StaticData = React.lazy(() => import('./StaticData'));
-const FetchData = React.lazy(() => import('./FetchData'));
-
-const promiseToSuspend = (promise) => {
-  let status = 'pending';
-  let response;
-
-  const suspender = promise.then(
-    (res) => {
-      status = 'success';
-      response = res;
-    },
-    (err) => {
-      status = 'error';
-      response = err;
-    }
-  );
-
-  const read = () => {
-    switch (status) {
-      case 'pending':
-        throw suspender;
-      case 'error':
-        throw response;
-      default:
-        return response;
-    }
-  };
-
-  return { read };
-};
-
-const todoDataWrapper = promiseToSuspend(
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ title: 'Todo List' });
-    }, 2000);
-  })
-);
-
-const SuspendedComponent = () => {
-  const todoData = todoDataWrapper.read();
-  return <h1>I'm so slow! {todoData.title}</h1>;
-};
+const Home = customLazy(() => import('./Home'));
+const PageOne = React.lazy(() => import('./PageOne'));
+const PageTwo = React.lazy(() => import('./PageTwo'));
 
 const Layout = () => {
   return (
-    <Suspense fallback={'Loading...'}>
-      <SuspendedComponent />
-      <div className="page-container">
-        <nav>
-          <ActiveLink to="/">Home</ActiveLink>
-          <ActiveLink to="/static">Static</ActiveLink>
-          <ActiveLink to="/fetch-data">Fetch Data</ActiveLink>
-        </nav>
+    <div className="page-container">
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/page-one">PageOne</Link>
+        <Link to="page-two">PageTwo</Link>
+        <Link to="loading-page">LoadingPage</Link>
+      </nav>
+      <Suspense fallback={'Loading...'}>
         <Outlet />
-      </div>
-    </Suspense>
+      </Suspense>
+    </div>
   );
 };
 
@@ -79,8 +35,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="static" element={<StaticData />} />
-            <Route path="fetch-data" element={<FetchData />} />
+            <Route path="page-one" element={<PageOne />} />
+            <Route path="page-two" element={<PageTwo />} />
+            <Route path="loading-page" element={<LoadingPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
