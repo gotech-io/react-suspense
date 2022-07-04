@@ -12,7 +12,7 @@ const LoadingMedium = () => {
       setData(data);
       setIsLoading(false);
     })();
-  }, [isLoading]);
+  }, []);
 
   return isLoading ? (
     <div style={{ margin: '12px auto' }}>
